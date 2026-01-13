@@ -1,5 +1,6 @@
 package com.taobao.arthas.core.view;
 
+import com.taobao.arthas.core.GlobalOptions;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -190,6 +191,39 @@ public class ObjectViewTest {
     }
 
     @Test
+    public void testEnum() {
+        EnumDemo t = EnumDemo.DEMO;
+        ObjectView objectView = new ObjectView(t, 3);
+        Assert.assertEquals("@EnumDemo[DEMO]", objectView.draw());
+    }
+
+    @Test
+    public void testEnumList() {
+        EnumDemo t = EnumDemo.DEMO;
+        ObjectView objectView = new ObjectView(new Object[] {t}, 3);
+        String expected = "@Object[][\n" +
+            "    @EnumDemo[DEMO],\n" +
+            "]";
+        Assert.assertEquals(expected, objectView.draw());
+    }
+
+    @Test
+    public void testJsonFormatDoNotCreateNewInstance() {
+        boolean old = GlobalOptions.isUsingJson;
+        try {
+            JsonFormatSingleton singleton = JsonFormatSingleton.getInstance();
+            GlobalOptions.isUsingJson = true;
+
+            ObjectView objectView = new ObjectView(new Object[] { singleton }, 3);
+            String output = objectView.draw();
+            Assert.assertFalse(output.startsWith("ERROR DATA!!!"));
+            Assert.assertEquals(1, JsonFormatSingleton.constructorCalls);
+        } finally {
+            GlobalOptions.isUsingJson = old;
+        }
+    }
+
+    @Test
     public void testDate() {
         Date d = new Date(1531204354961L - TimeZone.getDefault().getRawOffset()
                         + TimeZone.getTimeZone("GMT+8").getRawOffset());
@@ -264,6 +298,67 @@ public class ObjectViewTest {
 
         private static NestedClass get(int code) {
             return new NestedClass(code);
+        }
+    }
+
+    /**
+     * 显示基类属性值
+     */
+    @Test
+    public void testObjectViewBaseFieldValue() {
+        SonBean sonBean = new SonBean();
+        sonBean.setI(10);
+        sonBean.setJ("test");
+
+        ObjectView objectView = new ObjectView(sonBean, 3, 100);
+        Assert.assertTrue(objectView.draw().contains("i=@Integer[10]"));
+    }
+
+    private class BaseBean {
+        private int i;
+
+        public int getI() {
+            return i;
+        }
+
+        public void setI(int i) {
+            this.i = i;
+        }
+    }
+
+    private class SonBean extends BaseBean {
+        private String j;
+
+        public String getJ() {
+            return j;
+        }
+
+        public void setJ(String j) {
+            this.j = j;
+        }
+    }
+
+    public enum EnumDemo {
+        DEMO;
+    }
+
+    public static class JsonFormatSingleton {
+        private static final JsonFormatSingleton INSTANCE;
+        private static volatile int constructorCalls = 0;
+
+        static {
+            INSTANCE = new JsonFormatSingleton();
+        }
+
+        private JsonFormatSingleton() {
+            constructorCalls++;
+            if (constructorCalls > 1) {
+                throw new IllegalStateException("JsonFormatSingleton is created!");
+            }
+        }
+
+        public static JsonFormatSingleton getInstance() {
+            return INSTANCE;
         }
     }
 }
