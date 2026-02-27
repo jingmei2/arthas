@@ -99,7 +99,7 @@
             <dependency>
                 <groupId>com.alibaba</groupId>
                 <artifactId>bytekit-core</artifactId>
-                <version>0.1.4</version>
+                <version>0.1.6</version>
             </dependency>
             <dependency>
                 <groupId>org.benf</groupId>
@@ -134,12 +134,12 @@
             <dependency>
                 <groupId>com.alibaba.arthas</groupId>
                 <artifactId>arthas-repackage-logger</artifactId>
-                <version>0.0.19</version>
+                <version>0.0.20</version>
             </dependency>
             <dependency>
                 <groupId>com.alibaba</groupId>
                 <artifactId>repackage-asm</artifactId>
-                <version>0.0.19</version>
+                <version>0.0.20</version>
             </dependency>
             <dependency>
                 <groupId>com.alibaba.fastjson2</groupId>
