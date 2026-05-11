@@ -17,6 +17,7 @@ export const sidebarZH = {
             "/doc/base64.md",
             "/doc/cat.md",
             "/doc/classloader.md",
+            "/doc/classloader-metaspace.md",
             "/doc/cls.md",
             "/doc/dashboard.md",
             "/doc/dump.md",

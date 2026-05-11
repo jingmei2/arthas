@@ -17,6 +17,7 @@ export const sidebarEN = {
             "/en/doc/base64.md",
             "/en/doc/cat.md",
             "/en/doc/classloader.md",
+            "/en/doc/classloader-metaspace.md",
             "/en/doc/cls.md",
             "/en/doc/dashboard.md",
             "/en/doc/dump.md",
